@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Text;
 using System.IO;
 
-namespace Taiwan_Import_Export
+namespace TaiwanGoodsTradeData
 {
     class Program
     {
@@ -56,6 +56,9 @@ namespace Taiwan_Import_Export
             var htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(html);
 
+            HtmlNode htmlNode = htmlDocument.DocumentNode.SelectSingleNode("//button[@class='btn g-recaptcha']");
+            string dataSiteKey = htmlNode.GetAttributeValue("data-sitekey", "");
+
             //var divss = htmlDocument.DocumentNode.Descendants("div");
             var divs = htmlDocument.DocumentNode.Descendants("div").
                 Where(node => node.GetAttributeValue("class", "").Equals("content_info")).ToList();
@@ -72,16 +75,33 @@ namespace Taiwan_Import_Export
             request.ContentType = "application/x-www-form-urlencoded";
 
             NameValueCollection outgoingQueryString = HttpUtility.ParseQueryString(String.Empty);
-            outgoingQueryString.Add("ExportTotal", "6");
-            outgoingQueryString.Add("REPORT_TYPE_0", "0");
-            outgoingQueryString.Add("HS_TYPE_2", "2");
-            outgoingQueryString.Add("goodsCodeValue", "8486");
-            outgoingQueryString.Add("COUNTRY_TYPE", "0");
-            outgoingQueryString.Add("Statistics1", "1");
-            outgoingQueryString.Add("START_YEAR", "108");
-            outgoingQueryString.Add("START_MONTH", "1");
-            outgoingQueryString.Add("END_YEAR", "110");
-            outgoingQueryString.Add("END_MONTH", "3");
+            outgoingQueryString.Add("pStartyear", "108"); // import: 3/export: 6
+            outgoingQueryString.Add("pEndyer", "110"); // by year: 1/by month: 0
+            outgoingQueryString.Add("pStartmonth", "1");
+            outgoingQueryString.Add("pEndmonth", "3");
+            outgoingQueryString.Add("pGtNote", "");
+            outgoingQueryString.Add("pColSeq", "進出口別 / 日期 / 貨品別");
+            outgoingQueryString.Add("pCnyList", "");
+            outgoingQueryString.Add("minYear", "92");
+            outgoingQueryString.Add("maxYear", "110");
+            outgoingQueryString.Add("maxMonth", "3");
+            outgoingQueryString.Add("minMonth", "1");
+            outgoingQueryString.Add("maxYearByYear", "109");
+
+            outgoingQueryString.Add("searchInfo.TypePort", "6"); // import: 3/export: 6
+            outgoingQueryString.Add("searchInfo.TypeTime", "0"); // by year: 1/by month: 0
+            outgoingQueryString.Add("searchInfo.StartYear", "108");
+            outgoingQueryString.Add("searchInfo.StartMonth", "1");
+            outgoingQueryString.Add("searchInfo.EndYear", "110");
+            outgoingQueryString.Add("searchInfo.EndMonth", "3");
+            outgoingQueryString.Add("searchInfo.goodsName", "21");
+            outgoingQueryString.Add("searchInfo.goodsType", "2");
+            outgoingQueryString.Add("searchInfo.goodsCodeGroup", "8486");
+            outgoingQueryString.Add("searchInfo.groupType", "0");
+            outgoingQueryString.Add("searchInfo.CountryName", "");
+            outgoingQueryString.Add("searchInfo.Type", "1");
+            outgoingQueryString.Add("searchInfo.OrderType", "進出口別 / 日期 / 貨品別");
+            outgoingQueryString.Add("g-recaptcha-response", "03AGdBq268Dq5OPGwAjdKBZuBCXJG6bmJ74Zj2jHCgZR0_EyTzYO_GMUe0imC_vHDI6YT16yJkFkAGjnRFmMkpfvJmBwkheaNZ1LywZVoRGCNYHYmgIO5_Fn70iCsC3JWCOURsFw1U4JtdRpq8KVDtA_RFihV3spjp9fT10_eC1_FM6vAkiCMl8qDBKbATLrwP3gCe8gWVrLiGBSzK5YHe5viJ7GHBhBAmTQN8fTohtoVxoj6zOVWKpVxkwZ-J6dSoXu5VsPUV_bgM5lb_6WahLVDUxyX8v0gMp5YkL1eciT-HXohr3_cgZbzRrmQMkvs_2PDNsV5juRygZIeOkhVAte-YdKomHs66QVXVBbEg1GWzCG_wqL5MPVovNGSCg3YJhO1NCkXLkJUrYe1-KEC5W49Q7LBpnVEEiuBLKj9bZmOigmNAhVH8WpujUqh3kVW5GbWFeZsXB5ONUjJw_7yc9CyiNfg-c2ErJA");
             string postdata = outgoingQueryString.ToString();
 
             byte[] byteArray = Encoding.UTF8.GetBytes(postdata);

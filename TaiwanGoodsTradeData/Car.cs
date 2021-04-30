@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Taiwan_Import_Export
+namespace TaiwanGoodsTradeData
 {
     [DebuggerDisplay("{Model}, {Price}")]
     class Car
